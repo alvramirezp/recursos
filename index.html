@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Banco de Recursos Musicales · Aula de Música y Danza (Educación Primaria)</title>
+
+  <!-- Tipografías Google Fonts: Nunito (redondeada para títulos) y Plus Jakarta Sans (limpia para lectura) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS para diseño limpio, accesible y totalmente responsive -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ['Nunito', 'sans-serif'],
+            sans: ['Plus Jakarta Sans', 'sans-serif'],
+          },
+          colors: {
+            fondo: '#F8FAFC',
+            textoPrincipal: '#1E293B',
+            textoSecundario: '#475569',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Estilos base de accesibilidad y suavizado */
+    html {
+      scroll-behavior: smooth;
+    }
+    body {
+      background-color: #F8FAFC;
+      color: #1E293B;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    h1, h2, h3, .font-titulo {
+      font-family: 'Nunito', sans-serif;
+    }
+    /* Anillo de enfoque visible para navegación con teclado o pizarra digital */
+    button:focus-visible, a:focus-visible, input:focus-visible {
+      outline: 3px solid #0284C7;
+      outline-offset: 2px;
+    }
+    /* Animación suave de entrada del visor modal */
+    @keyframes fadeInScale {
+      from {
+        opacity: 0;
+        transform: scale(0.97) translateY(8px);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+    .modal-animado {
+      animation: fadeInScale 0.2s ease-out forwards;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col antialiased selection:bg-sky-200 selection:text-sky-950">
+
+  <!-- ===================================================================== -->
+  <!-- 1. PORTADA DE BIENVENIDA Y BUSCADOR / FILTROS COMBINABLES             -->
+  <!-- ===================================================================== -->
+  <main id="catalogo-recursos" class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-7 sm:py-10">
+
+    <!-- Cabecera descriptiva de la sección -->
+    <section class="mb-7 sm:mb-8">
+      <div class="bg-white rounded-[24px] p-6 sm:p-8 border border-slate-200/90 shadow-xs relative overflow-hidden">
+        <!-- Detalles decorativos pastel suaves -->
+        <div class="hidden sm:block absolute -right-10 -top-10 w-44 h-44 rounded-full bg-sky-100/70 pointer-events-none" aria-hidden="true"></div>
+        <div class="hidden sm:block absolute right-24 -bottom-12 w-36 h-36 rounded-full bg-yellow-100/70 pointer-events-none" aria-hidden="true"></div>
+
+        <div class="relative z-10 max-w-3xl">
+          <h1 class="font-titulo text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-900 tracking-tight mb-2.5">
+            Banco de Recursos Musicales
+          </h1>
+          <p class="text-slate-700 text-base sm:text-lg leading-relaxed">
+            Explora infografías visuales, presentaciones interactivas, vídeos explicativos y partituras listas para tocar y cantar en clase o practicar desde casa.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Panel de Buscador y Filtros Combinables -->
+    <section aria-label="Buscador y filtros de recursos" class="bg-white rounded-[24px] p-5 sm:p-7 border border-slate-200/90 shadow-xs mb-8">
+      
+      <!-- Barra de búsqueda por texto -->
+      <div class="mb-6">
+        <label for="buscador-texto" class="block text-sm font-bold text-slate-800 mb-2">
+          Buscar por palabra clave, canción o contenido
+        </label>
+        <div class="relative">
+          <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-500" aria-hidden="true">
+            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <path d="m21 21-4.3-4.3"></path>
+            </svg>
+          </div>
+          <input
+            id="buscador-texto"
+            type="search"
+            placeholder="Ej. ukelele, compás, flauta, Debajo un botón, percusión..."
+            class="w-full pl-12 pr-12 py-3.5 rounded-2xl bg-slate-50 border-2 border-slate-200 text-slate-900 placeholder-slate-500 text-base font-medium focus:bg-white focus:border-sky-600 focus:outline-none transition-colors"
+          />
+          <button
+            id="btn-borrar-busqueda"
+            type="button"
+            aria-label="Borrar texto de búsqueda"
+            class="hidden absolute inset-y-0 right-2.5 my-auto h-9 px-3 rounded-xl bg-slate-200/80 hover:bg-slate-300 text-slate-800 text-xs font-bold transition-colors"
+          >
+            Borrar
+          </button>
+        </div>
+      </div>
+
+      <!-- Grupos de Filtros Rápidos -->
+      <div class="space-y-5">
+
+        <!-- Filtro 1: Tipo de material (con código de colores pastel) -->
+        <div>
+          <span id="label-filtro-tipo" class="block text-xs font-extrabold uppercase tracking-wider text-slate-600 mb-2.5">
+            1. Tipo de material
+          </span>
+          <div role="group" aria-labelledby="label-filtro-tipo" id="filtros-tipo" class="flex flex-wrap gap-2">
+            <!-- Los botones se generan dinámicamente desde JavaScript -->
+          </div>
+        </div>
+
+        <!-- Filtro 2: Bloque de contenido -->
+        <div>
+          <span id="label-filtro-bloque" class="block text-xs font-extrabold uppercase tracking-wider text-slate-600 mb-2.5">
+            2. Bloque de contenido
+          </span>
+          <div role="group" aria-labelledby="label-filtro-bloque" id="filtros-bloque" class="flex flex-wrap gap-2">
+            <!-- Los botones se generan dinámicamente desde JavaScript -->
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Barra inferior de estado de resultados y botón Limpiar filtros -->
+      <div class="mt-6 pt-5 border-t border-slate-200/80 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <p id="contador-resultados" class="text-sm sm:text-base font-bold text-slate-800" aria-live="polite">
+          Mostrando 8 de 8 recursos
+        </p>
+
+        <button
+          id="btn-limpiar-filtros"
+          type="button"
+          class="hidden self-start sm:self-auto inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-300 text-sm font-bold transition-colors"
+        >
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+            <path d="M3 3v5h5"></path>
+          </svg>
+          <span>Limpiar filtros</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- 2. CUADRÍCULA DE TARJETAS DE RECURSOS                                 -->
+    <!-- ===================================================================== -->
+    <section aria-label="Listado de recursos educativos">
+      <!-- Cuadrícula responsive: 1 columna en móvil, 2 en tablet, 3 en escritorio -->
+      <div id="grid-recursos" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Las tarjetas se renderizan aquí mediante JavaScript -->
+      </div>
+
+      <!-- Mensaje amigable cuando ningún recurso coincide con la búsqueda -->
+      <div id="estado-vacio" class="hidden bg-white rounded-[24px] p-8 sm:p-12 border border-slate-200 text-center max-w-xl mx-auto my-6">
+        <div class="w-16 h-16 rounded-2xl bg-purple-100 text-purple-900 flex items-center justify-center mx-auto mb-4" aria-hidden="true">
+          <svg class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.3-4.3"></path>
+            <path d="M8 11h6"></path>
+          </svg>
+        </div>
+        <h2 class="font-titulo text-xl sm:text-2xl font-extrabold text-slate-900 mb-2">
+          No hemos encontrado recursos con esos filtros
+        </h2>
+        <p class="text-slate-600 text-base mb-6">
+          Prueba a seleccionar otro tipo de material, cambiar el bloque de contenido o borrar el texto del buscador.
+        </p>
+        <button
+          id="btn-reset-vacio"
+          type="button"
+          class="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-2xl bg-sky-700 hover:bg-sky-800 text-white font-bold text-base transition-colors"
+        >
+          Mostrar todos los recursos
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===================================================================== -->
+  <!-- 3. PIE DE PÁGINA EDUCATIVO Y LICENCIA                                 -->
+  <!-- ===================================================================== -->
+  <footer class="bg-white border-t border-slate-200/90 mt-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div class="w-full space-y-1.5">
+        <p class="font-titulo text-base sm:text-lg font-extrabold text-slate-800">
+          Recursos creados para el aula de Música y Danza · Educación Primaria
+        </p>
+        <p class="text-sm text-slate-600 leading-relaxed">
+          Materiales didácticos de elaboración propia y arreglos sobre repertorio tradicional y de Dominio Público. Uso educativo gratuito y sin fines comerciales bajo licencia
+          <span class="font-semibold text-slate-800">Creative Commons BY-NC-SA 4.0</span>.
+        </p>
+      </div>
+
+      <div class="text-center mt-8 pt-6 border-t border-gray-100 flex flex-col items-center justify-center space-y-3">
+        <p class="text-xs font-semibold text-gray-400 uppercase tracking-widest text-center">
+          Mundo Pentagrama | Portal Educativo | Álvaro Ramírez
+        </p>
+        <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" class="hover:opacity-80 transition-opacity" title="Licencia Creative Commons Atribución-NoComercial-CompartirIgual 4.0 Internacional">
+          <img alt="Licencia Creative Commons" src="https://mirrors.creativecommons.org/presskit/buttons/88x31/svg/by-nc-sa.svg" class="h-8" />
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ===================================================================== -->
+  <!-- 4. VISOR MODAL INTEGRADO (PARA VER RECURSOS SIN SALIR DE LA WEB)      -->
+  <!-- ===================================================================== -->
+  <div
+    id="visor-modal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="modal-titulo"
+    class="hidden fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-slate-900/60 backdrop-blur-xs"
+  >
+    <div id="modal-contenedor" class="modal-animado bg-white w-full max-w-4xl max-h-[92vh] rounded-[24px] border border-slate-200 shadow-2xl flex flex-col overflow-hidden">
+      
+      <!-- Cabecera del visor modal -->
+      <div id="modal-cabecera" class="px-5 sm:px-7 py-4 border-b border-slate-200 flex items-start sm:items-center justify-between gap-4 bg-slate-50">
+        <div class="min-w-0">
+          <div class="flex flex-wrap items-center gap-2 mb-1">
+            <span id="modal-badge-tipo" class="inline-flex items-center px-3 py-0.5 rounded-full text-xs font-extrabold">
+              Tipo
+            </span>
+            <span id="modal-badge-plataforma" class="text-xs font-bold text-slate-600">
+              Plataforma
+            </span>
+          </div>
+          <h2 id="modal-titulo" class="font-titulo text-lg sm:text-2xl font-extrabold text-slate-900 truncate">
+            Título del recurso
+          </h2>
+        </div>
+
+        <button
+          id="modal-btn-cerrar"
+          type="button"
+          aria-label="Cerrar visor de recurso"
+          class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white hover:bg-slate-100 text-slate-800 border border-slate-300 font-bold text-sm shrink-0 transition-colors"
+        >
+          <span>Cerrar</span>
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M18 6 6 18"></path>
+            <path d="m6 6 12 12"></path>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Cuerpo del visor modal (iframe real o vista previa interactiva de muestra) -->
+      <div id="modal-cuerpo" class="flex-1 overflow-y-auto p-4 sm:p-6 bg-slate-50/70">
+        <!-- Se rellena dinámicamente según el recurso seleccionado -->
+      </div>
+
+      <!-- Pie del visor modal con descripción y botón para abrir en pestaña nueva -->
+      <div class="px-5 sm:px-7 py-4 border-t border-slate-200 bg-white flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <p id="modal-descripcion" class="text-sm text-slate-700 leading-snug">
+          Descripción del material.
+        </p>
+        <div class="flex items-center gap-2.5 shrink-0">
+          <a
+            id="modal-btn-externo"
+            href="#"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-900 text-white font-bold text-sm transition-colors"
+          >
+            <span>Abrir en ventana nueva</span>
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+              <polyline points="15 3 21 3 21 9"></polyline>
+              <line x1="10" y1="14" x2="21" y2="3"></line>
+            </svg>
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- 5. LÓGICA JAVASCRIPT Y LISTADO EDITABLE DE RECURSOS                   -->
+  <!-- ===================================================================== -->
+  <script>
+    /* ==========================================================================
+       GUÍA RÁPIDA PARA AÑADIR NUEVOS RECURSOS (SIN TOCAR EL DISEÑO HTML)
+       ==========================================================================
+       Para publicar un nuevo material en el futuro:
+       1. Copia la siguiente plantilla (desde la llave { hasta la coma },).
+       2. Pégala al principio o al final de la lista "const RECURSOS = [ ... ]".
+       3. Rellena los datos entre comillas.
+
+       PLANTILLA LISTA PARA COPIAR Y PEGAR:
+       {
+         id: "recurso-nuevo-1",
+         titulo: "Título de tu actividad o partitura",
+         tipo: "Infografía", // Opciones exactas: "Infografía", "Presentación", "Vídeo", "Partitura"
+         plataforma: "Canva", // Ej: "Canva", "Genially", "YouTube", "Mediateca EducaMadrid", "PDF"
+         bloque: "Lenguaje Musical", // Opciones exactas: "Lenguaje Musical", "Canto", "Instrumentos", "Danza y Percusión corporal"
+         descripcion: "Breve explicación clara de qué aprenderá el alumnado con este material.",
+         etiquetas: ["compás", "negra", "corcheas"], // Palabras clave extra para el buscador
+         urlVer: "https://enlace-para-ver-o-incrustar", // Enlace de YouTube, Genially, Canva o PDF
+         urlDescarga: "" // Opcional: pon aquí el enlace directo al archivo PDF si es una partitura
+       },
+
+       CONSEJO SOBRE ENLACES PARA EL VISOR INTEGRADO:
+       - YouTube: usa el formato incrustable "https://www.youtube.com/embed/CODIGO_DEL_VIDEO"
+       - Mediateca EducaMadrid: usa la URL de inserción (iframe) que ofrece la Mediateca.
+       - Genially / Canva: pega el enlace público de visualización o inserción.
+       - PDF (Partituras): sube el PDF a tu carpeta (ej. "partituras/cancion.pdf") o Google Drive.
+       ========================================================================== */
+
+    const RECURSOS = [
+      {
+        id: "rec-figuras-musicales",
+        titulo: "Las figuras musicales y sus silencios",
+        tipo: "Infografía",
+        plataforma: "Canva",
+        bloque: "Lenguaje Musical",
+        descripcion: "Esquema visual muy claro con la redonda, blanca, negra, corcheas y sus silencios, acompañado de sílabas rítmicas para leer en clase.",
+        etiquetas: ["figuras", "silencios", "negra", "blanca", "corcheas", "pulso", "lectura rítmica"],
+        urlVer: "demo://infografia-figuras",
+        urlDescarga: ""
+      },
+      {
+        id: "rec-familias-instrumentos",
+        titulo: "¡A explorar las familias de instrumentos!",
+        tipo: "Presentación",
+        plataforma: "Genially",
+        bloque: "Instrumentos",
+        descripcion: "Presentación interactiva con botones sonoros y juegos de clasificación entre cuerda, viento madera, viento metal y percusión.",
+        etiquetas: ["orquesta", "cuerda", "viento", "percusión", "timbre", "audición"],
+        urlVer: "demo://presentacion-instrumentos",
+        urlDescarga: ""
+      },
+      {
+        id: "rec-percusion-corporal-4x4",
+        titulo: "Percusión corporal: patrón rítmico en compás de 4/4",
+        tipo: "Vídeo",
+        plataforma: "Mediateca EducaMadrid",
+        bloque: "Danza y Percusión corporal",
+        descripcion: "Tutorial paso a paso para practicar coordinación con palmas, pitos, rodillas y pisadas sobre una base musical motivadora.",
+        etiquetas: ["cuerpo", "palmas", "coordinación", "compás", "movimiento", "educamadrid"],
+        urlVer: "demo://video-percusion",
+        urlDescarga: ""
+      },
+      {
+        id: "rec-partitura-debajo-boton",
+        titulo: "Debajo un botón (Arreglo para flauta y láminas)",
+        tipo: "Partitura",
+        plataforma: "PDF",
+        bloque: "Canto",
+        descripcion: "Arreglo didáctico de la canción popular infantil con nombre de notas opcional, digitación de flauta dulce (SOL-LA-SI-DO') y bordón de xilófono.",
+        etiquetas: ["canción tradicional", "popular", "flauta dulce", "xilófono", "orff", "sol la si"],
+        urlVer: "demo://partitura-boton",
+        urlDescarga: "demo://descarga-partitura-boton"
+      },
+      {
+        id: "rec-infografia-ukelele",
+        titulo: "Primeros acordes en el ukelele: Do, Fa y Sol7",
+        tipo: "Infografía",
+        plataforma: "Canva",
+        bloque: "Instrumentos",
+        descripcion: "Guía visual de postura correcta, numeración de dedos de la mano izquierda y diagramas grandes de los tres acordes básicos (C, F, G7).",
+        etiquetas: ["acordes", "cuerda pulsada", "ukelele", "do mayor", "fa mayor", "sol7", "digitación"],
+        urlVer: "demo://infografia-ukelele",
+        urlDescarga: ""
+      },
+      {
+        id: "rec-presentacion-tarara",
+        titulo: "La Tarara · Danza tradicional y acompañamiento",
+        tipo: "Presentación",
+        plataforma: "Genially",
+        bloque: "Danza y Percusión corporal",
+        descripcion: "Secuencia completa para trabajar esta canción tradicional española: historia, estructura musical, coreografía sencilla en corro y ritmo.",
+        etiquetas: ["folclore", "canción tradicional", "baile", "corro", "compás ternario"],
+        urlVer: "demo://presentacion-tarara",
+        urlDescarga: ""
+      },
+      {
+        id: "rec-video-pentagrama",
+        titulo: "Cómo leer las notas en el pentagrama (Clave de Sol)",
+        tipo: "Vídeo",
+        plataforma: "YouTube",
+        bloque: "Lenguaje Musical",
+        descripcion: "Explicación visual y amena sobre las líneas y espacios del pentagrama, desde el Do grave hasta el Do agudo, con retos de lectura.",
+        etiquetas: ["pentagrama", "clave de sol", "notas musicales", "altura", "lenguaje musical"],
+        urlVer: "demo://video-pentagrama",
+        urlDescarga: ""
+      },
+      {
+        id: "rec-partitura-himno-alegria",
+        titulo: "Himno de la Alegría (Arreglo fácil para Ukelele y Orff)",
+        tipo: "Partitura",
+        plataforma: "PDF",
+        bloque: "Instrumentos",
+        descripcion: "Partitura en Dominio Público adaptada para agrupación escolar con melodía principal, cifrado de acordes para ukelele y bajo de metalófono.",
+        etiquetas: ["beethoven", "dominio público", "ukelele", "agrupación", "instrumental", "partitura"],
+        urlVer: "demo://partitura-alegria",
+        urlDescarga: "demo://descarga-partitura-alegria"
+      }
+    ];
+
+    /* ==========================================================================
+       CONFIGURACIÓN DE COLORES PASTEL ACCESIBLES (WCAG AA/AAA) E ICONOS SVG
+       ========================================================================== */
+    const ESTILOS_TIPO = {
+      "Infografía": {
+        bgCardHeader: "bg-[#F3E8FF]",
+        textBadge: "text-[#581C87]",
+        borderBadge: "border-[#E9D5FF]",
+        btnActive: "bg-[#F3E8FF] text-[#581C87] border-[#C084FC] ring-2 ring-[#C084FC]/40",
+        icono: `
+          <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="3" y="3" width="18" height="18" rx="3"></rect>
+            <circle cx="8.5" cy="8.5" r="1.5"></circle>
+            <path d="m21 15-5-5L5 21"></path>
+          </svg>`
+      },
+      "Presentación": {
+        bgCardHeader: "bg-[#CCFBF1]",
+        textBadge: "text-[#115E59]",
+        borderBadge: "border-[#99F6E4]",
+        btnActive: "bg-[#CCFBF1] text-[#115E59] border-[#2DD4BF] ring-2 ring-[#2DD4BF]/40",
+        icono: `
+          <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="2" y="3" width="20" height="14" rx="2"></rect>
+            <path d="M8 21h8"></path>
+            <path d="M12 17v4"></path>
+            <polygon points="10 8 15 10.5 10 13 10 8" fill="currentColor"></polygon>
+          </svg>`
+      },
+      "Vídeo": {
+        bgCardHeader: "bg-[#FFEDD5]",
+        textBadge: "text-[#9A3412]",
+        borderBadge: "border-[#FED7AA]",
+        btnActive: "bg-[#FFEDD5] text-[#9A3412] border-[#FB923C] ring-2 ring-[#FB923C]/40",
+        icono: `
+          <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="2" y="4" width="20" height="16" rx="4"></rect>
+            <polygon points="10 9 16 12 10 15 10 9" fill="currentColor"></polygon>
+          </svg>`
+      },
+      "Partitura": {
+        bgCardHeader: "bg-[#E0F2FE]",
+        textBadge: "text-[#075985]",
+        borderBadge: "border-[#BAE6FD]",
+        btnActive: "bg-[#E0F2FE] text-[#075985] border-[#38BDF8] ring-2 ring-[#38BDF8]/40",
+        icono: `
+          <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <path d="M11 18v-5l4-1v4"></path>
+            <circle cx="9.5" cy="18" r="1.5" fill="currentColor"></circle>
+          </svg>`
+      }
+    };
+
+    const OPCIONES_TIPO = ["Todos", "Infografía", "Presentación", "Vídeo", "Partitura"];
+    const OPCIONES_BLOQUE = [
+      "Todos",
+      "Lenguaje Musical",
+      "Canto",
+      "Instrumentos",
+      "Danza y Percusión corporal"
+    ];
+
+    /* ==========================================================================
+       ESTADO DE LOS FILTROS Y REFERENCIAS AL DOM
+       ========================================================================== */
+    const estadoFiltros = {
+      texto: "",
+      tipo: "Todos",
+      bloque: "Todos"
+    };
+
+    const dom = {
+      buscador: document.getElementById("buscador-texto"),
+      btnBorrarBusqueda: document.getElementById("btn-borrar-busqueda"),
+      filtrosTipo: document.getElementById("filtros-tipo"),
+      filtrosBloque: document.getElementById("filtros-bloque"),
+      contador: document.getElementById("contador-resultados"),
+      btnLimpiarFiltros: document.getElementById("btn-limpiar-filtros"),
+      gridRecursos: document.getElementById("grid-recursos"),
+      estadoVacio: document.getElementById("estado-vacio"),
+      btnResetVacio: document.getElementById("btn-reset-vacio"),
+      // Modal
+      modal: document.getElementById("visor-modal"),
+      modalCabecera: document.getElementById("modal-cabecera"),
+      modalBadgeTipo: document.getElementById("modal-badge-tipo"),
+      modalBadgePlataforma: document.getElementById("modal-badge-plataforma"),
+      modalTitulo: document.getElementById("modal-titulo"),
+      modalCuerpo: document.getElementById("modal-cuerpo"),
+      modalDescripcion: document.getElementById("modal-descripcion"),
+      modalBtnCerrar: document.getElementById("modal-btn-cerrar"),
+      modalBtnExterno: document.getElementById("modal-btn-externo")
+    };
+
+    /* ==========================================================================
+       FUNCIONES AUXILIARES DE NORMALIZACIÓN Y RENDERIZADO DE FILTROS
+       ========================================================================== */
+    function normalizarTexto(texto) {
+      return texto
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "");
+    }
+
+    function renderizarBotonesFiltro() {
+      // 1. Botones de Tipo de material
+      dom.filtrosTipo.innerHTML = OPCIONES_TIPO.map((tipo) => {
+        const activo = estadoFiltros.tipo === tipo;
+        let clases = "bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100";
+        if (activo) {
+          clases = tipo === "Todos"
+            ? "bg-slate-800 text-white border-slate-800 shadow-xs"
+            : `${ESTILOS_TIPO[tipo].btnActive} font-extrabold`;
+        }
+        return `
+          <button
+            type="button"
+            data-filtro-tipo="${tipo}"
+            aria-pressed="${activo}"
+            class="px-4 py-2.5 rounded-2xl border text-sm font-bold transition-all cursor-pointer ${clases}"
+          >
+            ${tipo}
+          </button>
+        `;
+      }).join("");
+
+      // 2. Botones de Bloque de contenido
+      dom.filtrosBloque.innerHTML = OPCIONES_BLOQUE.map((bloque) => {
+        const activo = estadoFiltros.bloque === bloque;
+        const clases = activo
+          ? "bg-teal-800 text-white border-teal-800 shadow-xs"
+          : "bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100";
+        return `
+          <button
+            type="button"
+            data-filtro-bloque="${bloque}"
+            aria-pressed="${activo}"
+            class="px-4 py-2.5 rounded-2xl border text-sm font-bold transition-all cursor-pointer ${clases}"
+          >
+            ${bloque}
+          </button>
+        `;
+      }).join("");
+    }
+
+    /* ==========================================================================
+       FILTRADO Y RENDERIZADO DE LAS TARJETAS DE RECURSOS
+       ========================================================================== */
+    function obtenerRecursosFiltrados() {
+      const consulta = normalizarTexto(estadoFiltros.texto.trim());
+
+      return RECURSOS.filter((recurso) => {
+        // Filtro por tipo de material
+        if (estadoFiltros.tipo !== "Todos" && recurso.tipo !== estadoFiltros.tipo) {
+          return false;
+        }
+        // Filtro por bloque de contenido
+        if (estadoFiltros.bloque !== "Todos" && recurso.bloque !== estadoFiltros.bloque) {
+          return false;
+        }
+        // Filtro por búsqueda textual
+        if (consulta.length > 0) {
+          const textoCompleto = normalizarTexto([
+            recurso.titulo,
+            recurso.descripcion,
+            recurso.tipo,
+            recurso.plataforma,
+            recurso.bloque,
+            (recurso.etiquetas || []).join(" ")
+          ].join(" "));
+
+          if (!textoCompleto.includes(consulta)) {
+            return false;
+          }
+        }
+        return true;
+      });
+    }
+
+    function renderizarTarjetas() {
+      const filtrados = obtenerRecursosFiltrados();
+      const total = RECURSOS.length;
+
+      // Actualizar contador dinámico
+      dom.contador.textContent = `Mostrando ${filtrados.length} de ${total} ${total === 1 ? "recurso" : "recursos"}`;
+
+      // Mostrar u ocultar botón "Limpiar filtros" y "Borrar" del buscador
+      const hayFiltrosActivos =
+        estadoFiltros.texto.trim() !== "" ||
+        estadoFiltros.tipo !== "Todos" ||
+        estadoFiltros.bloque !== "Todos";
+
+      dom.btnLimpiarFiltros.classList.toggle("hidden", !hayFiltrosActivos);
+      dom.btnBorrarBusqueda.classList.toggle("hidden", estadoFiltros.texto.trim() === "");
+
+      // Si no hay resultados, mostrar estado vacío amigable
+      if (filtrados.length === 0) {
+        dom.gridRecursos.innerHTML = "";
+        dom.estadoVacio.classList.remove("hidden");
+        return;
+      }
+
+      dom.estadoVacio.classList.add("hidden");
+
+      // Generar HTML de cada tarjeta
+      dom.gridRecursos.innerHTML = filtrados.map((recurso) => {
+        const estilo = ESTILOS_TIPO[recurso.tipo] || ESTILOS_TIPO["Infografía"];
+        const esPartitura = recurso.tipo === "Partitura";
+
+        const botonSecundarioPDF = esPartitura
+          ? `
+            <button
+              type="button"
+              data-accion="descargar"
+              data-id="${recurso.id}"
+              class="inline-flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-[#E0F2FE] hover:bg-sky-200 text-[#075985] border border-sky-300 font-extrabold text-sm transition-colors cursor-pointer"
+              title="Descargar o imprimir partitura en PDF"
+            >
+              <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+              </svg>
+              <span>Descargar PDF</span>
+            </button>
+          `
+          : "";
+
+        return `
+          <article class="bg-white rounded-[22px] border border-slate-200/90 shadow-xs hover:shadow-md transition-all flex flex-col overflow-hidden">
+            
+            <!-- Cabecera visual pastel con icono ilustrativo y plataforma -->
+            <div class="${estilo.bgCardHeader} ${estilo.textBadge} px-5 py-4 border-b ${estilo.borderBadge} flex items-center justify-between gap-3">
+              <div class="flex items-center gap-2.5">
+                <div class="w-10 h-10 rounded-xl bg-white/80 flex items-center justify-center shadow-2xs shrink-0">
+                  ${estilo.icono}
+                </div>
+                <div>
+                  <span class="block text-xs font-extrabold uppercase tracking-wider opacity-90">
+                    ${recurso.tipo}
+                  </span>
+                  <span class="block text-xs font-bold opacity-80">
+                    ${recurso.plataforma}
+                  </span>
+                </div>
+              </div>
+
+              <!-- Etiqueta de bloque de contenido -->
+              <span class="inline-flex items-center px-3 py-1 rounded-full bg-white/85 text-slate-800 text-xs font-bold shadow-2xs text-right">
+                ${recurso.bloque}
+              </span>
+            </div>
+
+            <!-- Cuerpo de la tarjeta -->
+            <div class="p-5 sm:p-6 flex-1 flex flex-col">
+              <h2 class="font-titulo text-xl font-extrabold text-slate-900 leading-snug mb-2.5">
+                ${recurso.titulo}
+              </h2>
+
+              <p class="text-slate-700 text-sm sm:text-[15px] leading-relaxed mb-5 flex-1">
+                ${recurso.descripcion}
+              </p>
+
+              <!-- Botones grandes y táctiles de acción -->
+              <div class="flex flex-wrap gap-2.5 mt-auto">
+                <button
+                  type="button"
+                  data-accion="ver"
+                  data-id="${recurso.id}"
+                  class="flex-1 inline-flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-slate-800 hover:bg-slate-900 text-white font-bold text-sm transition-colors cursor-pointer"
+                >
+                  <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                  </svg>
+                  <span>Ver recurso</span>
+                </button>
+                ${botonSecundarioPDF}
+              </div>
+            </div>
+
+          </article>
+        `;
+      }).join("");
+    }
+
+    /* ==========================================================================
+       VISOR MODAL INTEGRADO (SOPORTA ENLACES REALES Y VISTAS PREVIAS DE MUESTRA)
+       ========================================================================== */
+    let ultimoElementoEnfocado = null;
+
+    function generarVistaPreviaDemo(recurso, modoDescarga = false) {
+      // Si el docente ya ha puesto un enlace real (http/https o ruta relativa), se carga en iframe
+      if (!recurso.urlVer.startsWith("demo://")) {
+        return `
+          <div class="w-full aspect-video min-h-[380px] sm:min-h-[460px] rounded-2xl overflow-hidden border border-slate-200 bg-white">
+            <iframe
+              src="${recurso.urlVer}"
+              title="${recurso.titulo}"
+              class="w-full h-full border-0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+              allowfullscreen
+            ></iframe>
+          </div>
+        `;
+      }
+
+      // Vistas previas interactivas de muestra para probar la web antes de poner tus enlaces reales
+      const avisoDemo = `
+        <div class="mb-4 px-4 py-3 rounded-2xl bg-amber-50 border border-amber-200 text-amber-950 text-xs sm:text-sm flex items-center gap-2.5">
+          <span class="px-2 py-0.5 rounded-md bg-amber-200 font-extrabold uppercase text-[11px]">Vista previa de muestra</span>
+          <span>Cuando pegues tu enlace real de <strong>${recurso.plataforma}</strong> en el listado JavaScript, aquí se cargará directamente tu material.</span>
+        </div>
+      `;
+
+      if (recurso.tipo === "Infografía") {
+        return `
+          ${avisoDemo}
+          <div class="bg-[#F3E8FF]/60 border-2 border-[#E9D5FF] rounded-2xl p-6 sm:p-8 text-slate-900">
+            <div class="max-w-2xl mx-auto bg-white rounded-2xl p-6 shadow-xs border border-purple-200">
+              <div class="text-center mb-6">
+                <span class="inline-block px-3 py-1 rounded-full bg-purple-100 text-purple-900 text-xs font-extrabold uppercase mb-2">Infografía Didáctica · ${recurso.plataforma}</span>
+                <h3 class="font-titulo text-2xl font-extrabold text-purple-950">${recurso.titulo}</h3>
+              </div>
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
+                <div class="p-4 rounded-2xl bg-purple-50 border border-purple-200">
+                  <div class="text-3xl font-extrabold text-purple-900 mb-1">𝅝</div>
+                  <div class="font-bold text-sm">Redonda</div>
+                  <div class="text-xs text-slate-600">4 pulsos</div>
+                </div>
+                <div class="p-4 rounded-2xl bg-teal-50 border border-teal-200">
+                  <div class="text-3xl font-extrabold text-teal-900 mb-1">𝅗𝅥</div>
+                  <div class="font-bold text-sm">Blanca</div>
+                  <div class="text-xs text-slate-600">2 pulsos</div>
+                </div>
+                <div class="p-4 rounded-2xl bg-amber-50 border border-amber-200">
+                  <div class="text-3xl font-extrabold text-amber-900 mb-1">𝅘𝅥</div>
+                  <div class="font-bold text-sm">Negra</div>
+                  <div class="text-xs text-slate-600">1 pulso (TA)</div>
+                </div>
+                <div class="p-4 rounded-2xl bg-sky-50 border border-sky-200">
+                  <div class="text-3xl font-extrabold text-sky-900 mb-1">♫</div>
+                  <div class="font-bold text-sm">Corcheas</div>
+                  <div class="text-xs text-slate-600">1 pulso (TI-TI)</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      if (recurso.tipo === "Presentación") {
+        return `
+          ${avisoDemo}
+          <div class="bg-[#CCFBF1]/60 border-2 border-[#99F6E4] rounded-2xl p-6 sm:p-8">
+            <div class="max-w-2xl mx-auto bg-white rounded-2xl p-6 shadow-xs border border-teal-200 text-center">
+              <span class="inline-block px-3 py-1 rounded-full bg-teal-100 text-teal-900 text-xs font-extrabold uppercase mb-3">Presentación Interactiva · ${recurso.plataforma}</span>
+              <h3 class="font-titulo text-2xl font-extrabold text-teal-950 mb-3">${recurso.titulo}</h3>
+              <p class="text-slate-700 text-sm sm:text-base mb-6">${recurso.descripcion}</p>
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-left">
+                <div class="p-4 rounded-xl bg-teal-50 border border-teal-200">
+                  <span class="text-xs font-extrabold text-teal-900 block mb-1">DIAPOSITIVA 1</span>
+                  <span class="font-bold text-sm text-slate-900">Escucha activa y descubrimiento</span>
+                </div>
+                <div class="p-4 rounded-xl bg-sky-50 border border-sky-200">
+                  <span class="text-xs font-extrabold text-sky-900 block mb-1">DIAPOSITIVA 2</span>
+                  <span class="font-bold text-sm text-slate-900">Actividad guiada en grupo</span>
+                </div>
+                <div class="p-4 rounded-xl bg-purple-50 border border-purple-200">
+                  <span class="text-xs font-extrabold text-purple-900 block mb-1">DIAPOSITIVA 3</span>
+                  <span class="font-bold text-sm text-slate-900">Reto interactivo de repaso</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      if (recurso.tipo === "Vídeo") {
+        return `
+          ${avisoDemo}
+          <div class="bg-slate-900 rounded-2xl p-6 sm:p-10 text-white text-center relative overflow-hidden">
+            <div class="max-w-lg mx-auto">
+              <div class="w-16 h-16 rounded-full bg-[#FFEDD5] text-[#9A3412] flex items-center justify-center mx-auto mb-4 shadow-lg">
+                <svg class="w-8 h-8 ml-1" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <polygon points="8 5 19 12 8 19 8 5"></polygon>
+                </svg>
+              </div>
+              <span class="inline-block px-3 py-1 rounded-full bg-orange-500/20 text-orange-200 text-xs font-bold mb-2">
+                Reproductor integrado · ${recurso.plataforma}
+              </span>
+              <h3 class="font-titulo text-xl sm:text-2xl font-extrabold mb-2">${recurso.titulo}</h3>
+              <p class="text-slate-300 text-sm mb-4">
+                El alumnado puede ver el vídeo directamente aquí sin distracciones ni vídeos relacionados externos.
+              </p>
+              <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+                <div class="bg-orange-400 w-1/3 h-full rounded-full"></div>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      // Vista previa de Partitura (PDF)
+      return `
+        ${avisoDemo}
+        <div class="bg-[#E0F2FE]/60 border-2 border-[#BAE6FD] rounded-2xl p-5 sm:p-8">
+          <div class="max-w-2xl mx-auto bg-white rounded-2xl p-6 sm:p-8 shadow-xs border border-sky-200">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-slate-200 pb-4 mb-5">
+              <div>
+                <span class="text-xs font-extrabold uppercase tracking-wider text-sky-800">Partitura de Aula · Dominio Público</span>
+                <h3 class="font-titulo text-xl sm:text-2xl font-extrabold text-slate-900">${recurso.titulo}</h3>
+              </div>
+              <button
+                type="button"
+                onclick="window.print()"
+                class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-sky-800 hover:bg-sky-900 text-white font-bold text-xs sm:text-sm transition-colors cursor-pointer"
+              >
+                <span>Imprimir / Guardar PDF</span>
+              </button>
+            </div>
+
+            <!-- Representación gráfica limpia de pentagrama escolar -->
+            <div class="bg-slate-50 rounded-xl p-4 border border-slate-200 mb-4 overflow-x-auto">
+              <svg class="w-full min-w-[420px] h-28" viewBox="0 0 520 110" fill="none" aria-label="Fragmento de partitura de muestra">
+                <!-- 5 líneas del pentagrama -->
+                <line x1="20" y1="30" x2="500" y2="30" stroke="#64748B" stroke-width="1.5"/>
+                <line x1="20" y1="42" x2="500" y2="42" stroke="#64748B" stroke-width="1.5"/>
+                <line x1="20" y1="54" x2="500" y2="54" stroke="#64748B" stroke-width="1.5"/>
+                <line x1="20" y1="66" x2="500" y2="66" stroke="#64748B" stroke-width="1.5"/>
+                <line x1="20" y1="78" x2="500" y2="78" stroke="#64748B" stroke-width="1.5"/>
+                <!-- Clave y compás -->
+                <text x="28" y="72" font-family="serif" font-size="52" fill="#0F172A">𝄞</text>
+                <text x="72" y="51" font-family="Nunito, sans-serif" font-weight="800" font-size="20" fill="#0F172A">4</text>
+                <text x="72" y="74" font-family="Nunito, sans-serif" font-weight="800" font-size="20" fill="#0F172A">4</text>
+                <!-- Notas musicales escolares -->
+                <ellipse cx="125" cy="54" rx="7" ry="5.5" fill="#0369A1"/>
+                <line x1="131.5" y1="54" x2="131.5" y2="24" stroke="#0369A1" stroke-width="2"/>
+                <text x="115" y="98" font-family="Plus Jakarta Sans, sans-serif" font-weight="700" font-size="11" fill="#075985">SOL</text>
+
+                <ellipse cx="185" cy="48" rx="7" ry="5.5" fill="#0369A1"/>
+                <line x1="191.5" y1="48" x2="191.5" y2="18" stroke="#0369A1" stroke-width="2"/>
+                <text x="178" y="98" font-family="Plus Jakarta Sans, sans-serif" font-weight="700" font-size="11" fill="#075985">LA</text>
+
+                <ellipse cx="245" cy="42" rx="7" ry="5.5" fill="#0369A1"/>
+                <line x1="245" y1="42" x2="245" y2="74" stroke="#0369A1" stroke-width="2"/>
+                <text x="240" y="98" font-family="Plus Jakarta Sans, sans-serif" font-weight="700" font-size="11" fill="#075985">SI</text>
+
+                <line x1="295" y1="30" x2="295" y2="78" stroke="#334155" stroke-width="2"/>
+
+                <ellipse cx="345" cy="36" rx="7" ry="5.5" fill="#0369A1"/>
+                <line x1="345" y1="36" x2="345" y2="68" stroke="#0369A1" stroke-width="2"/>
+                <text x="334" y="98" font-family="Plus Jakarta Sans, sans-serif" font-weight="700" font-size="11" fill="#075985">DO'</text>
+
+                <ellipse cx="415" cy="42" rx="7" ry="5.5" fill="none" stroke="#0369A1" stroke-width="2.5"/>
+                <line x1="415" y1="42" x2="415" y2="74" stroke="#0369A1" stroke-width="2"/>
+                <text x="410" y="98" font-family="Plus Jakarta Sans, sans-serif" font-weight="700" font-size="11" fill="#075985">SI</text>
+
+                <line x1="496" y1="30" x2="496" y2="78" stroke="#334155" stroke-width="3"/>
+              </svg>
+            </div>
+            ${modoDescarga ? `<p class="text-xs font-semibold text-sky-900 bg-sky-100 px-3.5 py-2 rounded-xl">Sugerencia: cuando añadas tu propio archivo PDF en <code class="font-mono">urlDescarga</code>, el botón "Descargar PDF" descargará el archivo directamente.</p>` : ""}
+          </div>
+        </div>
+      `;
+    }
+
+    function abrirModal(idRecurso, modoDescarga = false) {
+      const recurso = RECURSOS.find((r) => r.id === idRecurso);
+      if (!recurso) return;
+
+      // Si es una descarga directa de un archivo PDF real, abrirlo/descargarlo
+      if (modoDescarga && recurso.urlDescarga && !recurso.urlDescarga.startsWith("demo://")) {
+        window.open(recurso.urlDescarga, "_blank", "noopener,noreferrer");
+        return;
+      }
+
+      ultimoElementoEnfocado = document.activeElement;
+      const estilo = ESTILOS_TIPO[recurso.tipo] || ESTILOS_TIPO["Infografía"];
+
+      dom.modalBadgeTipo.className = `inline-flex items-center px-3 py-0.5 rounded-full text-xs font-extrabold ${estilo.bgCardHeader} ${estilo.textBadge}`;
+      dom.modalBadgeTipo.textContent = recurso.tipo;
+      dom.modalBadgePlataforma.textContent = recurso.plataforma;
+      dom.modalTitulo.textContent = recurso.titulo;
+      dom.modalDescripcion.textContent = recurso.descripcion;
+      dom.modalCuerpo.innerHTML = generarVistaPreviaDemo(recurso, modoDescarga);
+
+      // Configurar botón de apertura en ventana nueva
+      if (recurso.urlVer.startsWith("demo://")) {
+        dom.modalBtnExterno.classList.add("hidden");
+      } else {
+        dom.modalBtnExterno.classList.remove("hidden");
+        dom.modalBtnExterno.href = recurso.urlVer;
+      }
+
+      dom.modal.classList.remove("hidden");
+      document.body.classList.add("overflow-hidden");
+      dom.modalBtnCerrar.focus();
+    }
+
+    function cerrarModal() {
+      dom.modal.classList.add("hidden");
+      dom.modalCuerpo.innerHTML = ""; // Detiene reproducción de vídeos/iframes al cerrar
+      document.body.classList.remove("overflow-hidden");
+      if (ultimoElementoEnfocado) {
+        ultimoElementoEnfocado.focus();
+      }
+    }
+
+    /* ==========================================================================
+       ASIGNACIÓN DE EVENTOS INTERACTIVOS
+       ========================================================================== */
+    function resetearTodosLosFiltros() {
+      estadoFiltros.texto = "";
+      estadoFiltros.tipo = "Todos";
+      estadoFiltros.bloque = "Todos";
+      dom.buscador.value = "";
+      renderizarBotonesFiltro();
+      renderizarTarjetas();
+    }
+
+    // Eventos en los grupos de filtros (delegación de eventos)
+    dom.filtrosTipo.addEventListener("click", (e) => {
+      const btn = e.target.closest("[data-filtro-tipo]");
+      if (!btn) return;
+      estadoFiltros.tipo = btn.dataset.filtroTipo;
+      renderizarBotonesFiltro();
+      renderizarTarjetas();
+    });
+
+    dom.filtrosBloque.addEventListener("click", (e) => {
+      const btn = e.target.closest("[data-filtro-bloque]");
+      if (!btn) return;
+      estadoFiltros.bloque = btn.dataset.filtroBloque;
+      renderizarBotonesFiltro();
+      renderizarTarjetas();
+    });
+
+    // Buscador por texto en tiempo real
+    dom.buscador.addEventListener("input", (e) => {
+      estadoFiltros.texto = e.target.value;
+      renderizarTarjetas();
+    });
+
+    dom.btnBorrarBusqueda.addEventListener("click", () => {
+      estadoFiltros.texto = "";
+      dom.buscador.value = "";
+      dom.buscador.focus();
+      renderizarTarjetas();
+    });
+
+    dom.btnLimpiarFiltros.addEventListener("click", resetearTodosLosFiltros);
+    dom.btnResetVacio.addEventListener("click", resetearTodosLosFiltros);
+
+    // Clic en tarjetas ("Ver recurso" o "Descargar PDF")
+    dom.gridRecursos.addEventListener("click", (e) => {
+      const btn = e.target.closest("[data-accion]");
+      if (!btn) return;
+      const id = btn.dataset.id;
+      const esDescarga = btn.dataset.accion === "descargar";
+      abrirModal(id, esDescarga);
+    });
+
+    // Cierre del visor modal (botón, clic fuera del cuadro o tecla Escape)
+    dom.modalBtnCerrar.addEventListener("click", cerrarModal);
+    dom.modal.addEventListener("click", (e) => {
+      if (e.target === dom.modal) {
+        cerrarModal();
+      }
+    });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && !dom.modal.classList.contains("hidden")) {
+        cerrarModal();
+      }
+    });
+
+    // Inicialización al cargar la página
+    window.addEventListener("DOMContentLoaded", () => {
+      renderizarBotonesFiltro();
+      renderizarTarjetas();
+    });
+  </script>
+</body>
+</html>
